@@ -33,10 +33,11 @@ class SoftDeletableBehavior extends ModelBehavior {
 		if ($Model->hasField($this->field)) {
 			$id = $Model->id;	
 			
-			if ($Model->save(array($Model->alias => array($this->field => 'true')), array('callbacks' => false)) && $cascade) {
+			if ($Model->save(array($Model->alias => array($this->field => 'true')), array('validate' => false, 'callbacks' => false)) && $cascade) {
 				$Model->_deleteDependent($id, $cascade);
 				$Model->_deleteLinks($id);
-			}			
+			}
+			$Model->afterDelete();		
 			return false;
 		}		
 		return true;
