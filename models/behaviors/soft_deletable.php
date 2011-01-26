@@ -64,9 +64,9 @@ class SoftDeletableBehavior extends ModelBehavior {
 		$queryData = array_merge(array('isDeleted' => false), $queryData);
 
 		if ($this->settings[$model->name]['enabled'] && $model->hasField($this->field) && isset($queryData['isDeleted'])) {
-			if ($queryData['isDeleted']) {
+			if ($queryData['isDeleted'] === true) {
 				$queryData['conditions']['NOT'][$model->alias . '.' . $this->field] = $this->notDeleted($model);
-			} else {
+			} else($queryData['isDeleted'] === false) {
 				$queryData['conditions'][$model->alias . '.' . $this->field] = $this->notDeleted($model);
 			}
 		}
