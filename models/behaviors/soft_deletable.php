@@ -18,14 +18,14 @@ class SoftDeletableBehavior extends ModelBehavior {
 		
 		# Set associated model conditions
 		foreach (array('hasOne', 'hasMany', 'belongsTo') as $type) {
-			foreach ($model->$type as $modelName => &$params) {
-				if (!isset($model->$modelName)) {
+			foreach ($model->$type as $alias => &$params) {
+				if (!isset($model->$alias)) {
 					continue;
 				}
 				
-				$association = $model->$modelName;
-				if (in_array('SoftDeletable', (array)$association->actsAs) && $association->hasField($this->field)) {
-					$params['conditions'][$modelName . '.' . $this->field] = $this->notDeleted($association);
+				$association = $model->$alias;
+				if (in_array('SoftDeletable.SoftDeletable', (array)$association->actsAs) && $association->hasField($this->field)) {
+					$params['conditions'][$alias . '.' . $this->field] = $this->notDeleted($association);
 				}
 			}
 		}
