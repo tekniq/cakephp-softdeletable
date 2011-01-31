@@ -40,7 +40,12 @@ class SoftDeletableBehavior extends ModelBehavior {
  */	
 	function beforeDelete(&$model, $cascade) {
 		if ($model->hasField($this->field)) {
-			if (!$this->settings[$model->name]['enabled'] || $model->field($this->field) != $this->notDeleted($model)) {
+			$_deleted = $model->find('count', array(
+				'isDeleted' => true,
+				'conditions' => array($model->alias . '.' . $model->primaryKey => $model->id)
+			));
+			
+			if (!$this->settings[$model->name]['enabled'] || $_deleted) {
 				return true;
 			}
 			
