@@ -26,7 +26,7 @@ class SoftDeletableBehavior extends ModelBehavior {
 				
 				$association =& $model->$alias;
 				if ($this->_isDeletable($association)) {
-					$params['conditions'][$association->escapeField($this->field)] = $this->_notDeleted($association);
+					$params['conditions'][$association->alias . '.' . $this->field] = $this->_notDeleted($association);
 				}
 			}
 		}
@@ -70,9 +70,9 @@ class SoftDeletableBehavior extends ModelBehavior {
 
 		if ($this->settings[$model->name]['enabled'] && $model->hasField($this->field) && isset($queryData['isDeleted'])) {
 			if ($queryData['isDeleted']) {
-				$queryData['conditions']['NOT'][$model->escapeField($this->field)] = $this->_notDeleted($model);
+				$queryData['conditions']['NOT'][$model->alias . '.' . $this->field] = $this->_notDeleted($model);
 			} else {
-				$queryData['conditions'][$model->escapeField($this->field)] = $this->_notDeleted($model);
+				$queryData['conditions'][$model->alias . '.' . $this->field] = $this->_notDeleted($model);
 			}
 		}
 		return $queryData;
@@ -168,8 +168,8 @@ class SoftDeletableBehavior extends ModelBehavior {
 				if ($params['conditions']) {
 					$conditions = array_merge((array)$params['conditions'], $conditions);
 				}
-				if (array_key_exists($association->escapeField($this->field), $conditions)) {
-					unset($conditions[$association->escapeField($this->field)]);
+				if (array_key_exists($association->alias . '.' . $this->field, $conditions)) {
+					unset($conditions[$association->alias . '.' . $this->field]);
 				}
 				
 				$association->recursive = -1;
